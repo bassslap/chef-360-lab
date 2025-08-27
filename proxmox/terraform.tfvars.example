@@ -1,0 +1,162 @@
+/*************************************
+      Chef 360 Core - Proxmox Open Tofu Plan
+          version: 0.1.1
+**************************************/
+
+/**************************************
+  Universal Platform Vars
+***************************************/
+platform = {
+  // The host shortname that will be used for the chef360 instance
+  dns_shortname      = "chef360"
+
+  // DNS Zone 
+  dns_zone            = "lab.local"
+
+  // OS Version
+  os_version              = "22.04"  
+
+  // The number of linux based infra nodes that will be deployed
+  linux_node_count    = 2
+  os_name = "ubuntu"
+
+  // The number of Microsoft based infra nodes that will be deployed
+  windows_node_count  = 0
+}
+
+/**************************************
+  Resource Tags
+***************************************/
+tags = ["chef360", "lab", "demo"]
+
+/**************************************
+  Proxmox TF Vars
+***************************************/
+
+##### 192.168.220.0/23 is used here /#############
+##### pick you own RFC 1918 space for your lab /######
+
+// Individual variables for BPG provider
+proxmox_host = "192.168.220.200"
+api_user = "terraform@pve"
+api_token_name = "terraform"
+api_token_value = "xxxxxxxxxxxxxxxxxxxx"
+
+// Proxmox Configuration
+proxmox = {
+  // Proxmox API endpoint
+  endpoint = "https://192.168.220.200:8006"
+
+  // API Token ID
+  api_token_id = "terraform@pve!terraform"
+
+  // API Token Secret (the UUID part)
+  api_token_secret = "xxxxxxxxxxxxxxxxxxxx"
+
+  // Node name in Proxmox
+  node_name = "proxmox"
+
+  // SSH public key file path
+  public_key_file = "~/.ssh/id_rsa.pub"
+
+  // Template VM ID
+  template_id = 9000
+}
+
+// Networking Configuration
+networking = {
+  // Bridge name
+  bridge = "vmbr0"
+
+  // Storage pool
+  storage = "local-lvm"
+
+  // Node name (same as proxmox.node_name for simplicity)
+  node_name = "proxmox"
+
+  // VLAN tag (0 = no VLAN)
+  vlan_tag = 0
+
+  // Network gateway
+  gateway = "192.168.220.1"
+
+  // DNS servers
+  dns_servers = ["8.8.8.8", "8.8.4.4"]
+}
+
+/**************************************
+  Chef-360 Specific TF Vars                
+***************************************/
+chef360 = {
+  // VM cores for Chef-360
+  cores = 8
+
+  // VM memory in MB (48GB for better performance)
+  memory = 49152
+
+  // Disk size in GB
+  disk_size_gb = 800
+
+  // Static IP address for Chef 360
+  ip_address = "192.168.220.121"
+  local_fqdn = "<YOUR_LOCAL_DOMAN_NAME"
+
+  // Chef 360 - Replicated License Key
+  replicated_key = "xxxxxxxxxxxxxxxxxxxx"
+
+  // Release Channel
+  chef360_channel = "stable" ### stable OR rc for example
+}
+
+/**************************************
+  Workstation Specific TF Vars                
+***************************************/
+workstation = {
+  // VM cores for the Workstation
+  cores = 2
+
+  // VM memory in MB
+  memory = 8192
+
+  // Disk size in GB
+  disk_size_gb = 40
+
+  // Static IP address for workstation
+  ip_address = "192.168.220.122"
+
+  // SSL Certificate paths
+  ssl_private_key = "~/.ssh/id_rsa"           # Use SSH private key for SSL
+  ssl_public_key  = "~/.ssh/id_rsa.pub"       # Use SSH public key for SSL
+}
+
+/**************************************
+  Linux Nodes Configuration (Scalable)
+***************************************/
+linux_nodes = {
+  // Number of nodes to deploy (change this to scale up/down)
+  count = 2
+
+  // Starting IP address for nodes (will increment: .123, .124, .125, etc.)
+  ip_start = "192.168.220.123"
+
+  // VM specifications for all nodes
+  cores = 2
+  memory = 4096
+
+  // Disk size in GB
+  disk_size_gb = 20
+
+  // Naming pattern: node-linux-01, node-linux-02, etc.
+  name_prefix = "node-linux"
+}
+
+/**************************************
+  VM Credentials
+***************************************/
+proxmox_credentials = {
+  // VM username for all deployed VMs
+  vm_user = "ubuntu"
+  
+  // VM password for all deployed VMs
+  vm_password = "ubuntu123!"
+}
