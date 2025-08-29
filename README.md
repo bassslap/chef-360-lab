@@ -1,10 +1,8 @@
-# chef-360-core
+# CHEF 360 Platform + Courrier
 
-## OPEN TOFU Plan for the Chef 360 Platform Provisioning
+## OPEN TOFU Plan for the Chef 360 Platform and lab
 
-This is a start from scratch Terraform plan to install the base platform for Chef 360 Installation.
-
-This is based on the https://github.com/chef-cft/sa-demo-core/ provisioning plan that installs Chef Automate with Infra, a workstation and however many nodes are needed.
+This is Terraform/OpenTofu plan to install the base platform for Chef 360 Installation + workstation + linux nodes
 
 ## Supported Platforms
 
